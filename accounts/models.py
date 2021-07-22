@@ -40,7 +40,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    phone = models.CharField(max_length=10, unique=True)
+    phone = models.CharField(max_length=10, unique=True, null= True, blank=True)
     full_name = models.CharField(max_length=100, null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
