@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     #local
     'accounts',
     'student',
+    'rest_api',
+    'super_admin'
 
 ]
 
