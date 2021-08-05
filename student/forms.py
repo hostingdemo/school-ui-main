@@ -12,7 +12,7 @@ from django.forms.widgets import DateInput, Select
 class StudentFrom(ModelForm):
     class Meta:
         model = Student
-        exclude = ['user', 'create_at']
+        exclude = ['user', 'create_at', 'student_id']
         widgets = {
             'DOB': DateInput(attrs={'type': 'date'})
         }
@@ -26,7 +26,7 @@ class StudentFrom(ModelForm):
 class DocumentsFrom(ModelForm):
     class Meta:
         model = Documents
-        exclude = ['user', 'create_at']
+        exclude = ['user', 'create_at', 'student_id']
 
     def __init__(self, *args, **kwargs):
         super(DocumentsFrom, self).__init__(*args, **kwargs)
@@ -37,7 +37,7 @@ class DocumentsFrom(ModelForm):
 class ParentDetailsFrom(ModelForm):
     class Meta:
         model = ParentDetails
-        exclude = ['user', 'create_at']
+        exclude = ['user', 'create_at', 'student_id']
         widgets = {
             'father_dob': DateInput(attrs={'type': 'date'}),
             'mother_dob': DateInput(attrs={'type': 'date'})
@@ -52,7 +52,7 @@ class ParentDetailsFrom(ModelForm):
 class ContactDetailsFrom(ModelForm):
     class Meta:
         model = ContactDetails
-        exclude = ['user', 'create_at']
+        exclude = ['user', 'create_at', 'student_id']
         CHOICES = [('1', 'First'), ('2', 'Second')]
         widgets = {
             'state': Select(attrs={'class':'form-control'}, choices=CHOICES),
@@ -71,7 +71,7 @@ class ContactDetailsFrom(ModelForm):
 class AdditionalDetailsFrom(ModelForm):
     class Meta:
         model = AdditionalDetails
-        exclude = ['user', 'create_at']
+        exclude = ['user', 'create_at', 'student_id']
 
     def __init__(self, *args, **kwargs):
         super(AdditionalDetailsFrom, self).__init__(*args, **kwargs)

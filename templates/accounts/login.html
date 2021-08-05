@@ -107,7 +107,10 @@
           <div>{{ form.errors }}</div>
           <div class="signup">
             <p>
+                            <a href="{% provider_login_url "google" %}" class="btn btn-lg btn-danger btn-block">Google</a>
+
               Didn't have a account ? <a href="{% url 'signup' %}">Sign Up</a>
+            
             </p>
           </div>
         </div>

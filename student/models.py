@@ -10,7 +10,7 @@ User = settings.AUTH_USER_MODEL
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=10, unique=True, blank=True)
+    phone_number = models.CharField(max_length=10, unique=False, blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -29,7 +29,8 @@ Gender = [('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')]
 
 
 class Student(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
+    student_id = models.CharField(max_length=100, null=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     firstname = models.CharField(max_length=100, null=True)
     lastname = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, choices=Gender, default='Male')
@@ -43,7 +44,8 @@ class Student(models.Model):
 
 # <<<<<<<<<< ContactDetailsForm >>>>>>>>>>>>
 class ContactDetails(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
+    student_id = models.CharField(max_length=100, null=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     current_addr = models.CharField(max_length=100, null=True)
     current_addr2 = models.CharField(max_length=100, null=True)
     state = models.CharField(max_length=100, null=True, blank=True)
@@ -61,7 +63,8 @@ class ContactDetails(models.Model):
 
 # <<<<<<<<<< ParentDetails >>>>>>>>>>>>
 class ParentDetails(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
+    student_id = models.CharField(max_length=100, null=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     father_name = models.CharField(max_length=100, null=True)
     mother_name = models.CharField(max_length=100, null=True)
     father_dob = models.DateField(
@@ -79,7 +82,8 @@ class ParentDetails(models.Model):
 
 # <<<<<<<<<< AdditionalDetailz >>>>>>>>>>>>
 class AdditionalDetails(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
+    student_id = models.CharField(max_length=100, null=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     privious_school = models.CharField(max_length=100, blank=True, null=True)
     transfer_certificate_no = models.CharField(
         max_length=100, blank=True, null=True)
@@ -93,7 +97,8 @@ class AdditionalDetails(models.Model):
 
 # <<<<<<<<<< Documents >>>>>>>>>>>>
 class Documents(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
+    student_id = models.CharField(max_length=100, null=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     photo = models.FileField(upload_to="media", default='shri.jpg', null=True)
     id_proof = models.FileField(upload_to="media", null=True, blank=True)
     caste_certificate = models.FileField(

@@ -24,6 +24,17 @@ from .models import (
 )
 
 
+
+@login_required(login_url='login')
+def student_list(request):
+
+    student_list = Student.objects.all()
+    print(student_list)
+    
+    return render(request,  'student/student_list.html', {'student_list' : student_list})
+
+
+
 @login_required(login_url='login')
 def products(request):
     try:
@@ -64,6 +75,7 @@ def jsoncall(request):
     print('json is colled')
     return JsonResponse(data)
 
+import uuid 
 
 @login_required(login_url='login')
 def RegisterStudent(request):
@@ -96,7 +108,13 @@ def RegisterStudent(request):
         documentsform = DocumentsFrom(
             request.POST or None, request.FILES)
 
+        #unique key is generate here for user
+        uninque_key = uuid.uuid4().hex[:6].upper()
+        print('-------------------------------------')
+        print(uninque_key)
+
         if studentform.is_valid():
+            
             firstname = studentform.cleaned_data['firstname']
             lastname = studentform.cleaned_data['lastname']
             gender = studentform.cleaned_data['gender']
@@ -106,6 +124,7 @@ def RegisterStudent(request):
             caste = studentform.cleaned_data['caste']
             aadhar = studentform.cleaned_data['aadhar']
             student = Student(
+                student_id=uninque_key,
                 user=request.user,
                 firstname=firstname,
                 lastname=lastname,
@@ -115,6 +134,7 @@ def RegisterStudent(request):
                 religion=religion,
                 caste=caste,
                 aadhar=aadhar)
+                
             student.save()
         if contactform.is_valid():
             current_addr = contactform.cleaned_data['current_addr']
@@ -128,6 +148,7 @@ def RegisterStudent(request):
             permanent_city = contactform.cleaned_data['permanent_city']
             permanent_pincode = contactform.cleaned_data['permanent_pincode']
             contact = ContactDetails(
+                student_id=uninque_key,
                 user=request.user,
                 current_addr=current_addr,
                 current_addr2=current_addr2,
@@ -153,6 +174,7 @@ def RegisterStudent(request):
             mother_quali = parentform.cleaned_data['mother_quali']
             family_annual_income = parentform.cleaned_data['family_annual_income']
             parent = ParentDetails(
+                student_id=uninque_key,
                 user=request.user,
                 father_name=father_name,
                 mother_name=mother_name,
@@ -175,6 +197,7 @@ def RegisterStudent(request):
             stoppage_name = additionalform.cleaned_data['stoppage_name']
 
             additional = AdditionalDetails(
+                student_id=uninque_key,
                 user=request.user,
                 privious_school=privious_school,
                 transfer_certificate_no=transfer_certificate_no,
@@ -193,6 +216,7 @@ def RegisterStudent(request):
             character_certificate = documentsform.cleaned_data['character_certificate']
 
             document = Documents(
+                student_id=uninque_key,
                 user=request.user,
                 photo=photo,
                 id_proof=id_proof,
@@ -220,14 +244,13 @@ def RegisterStudent(request):
 
 
 @login_required(login_url='login')
-def UpdateRegisterStudent(request):
-    error = []
+def detail_view(request, student_id):
     user = request.user
-    student = get_object_or_404(Student, user=user)
-    contact = get_object_or_404(ContactDetails, user=user)
-    parent = get_object_or_404(ParentDetails, user=user)
-    additional = get_object_or_404(AdditionalDetails, user=user)
-    documents = get_object_or_404(Documents, user=user)
+    student = get_object_or_404(Student, user=user, student_id = student_id)
+    contact = get_object_or_404(ContactDetails, user=user, student_id = student_id)
+    parent = get_object_or_404(ParentDetails, user=user, student_id = student_id)
+    additional = get_object_or_404(AdditionalDetails, user=user, student_id = student_id)
+    documents = get_object_or_404(Documents, user=user, student_id = student_id)
 
     studentform = StudentFrom(request.POST or None, instance=student)
     contactform = ContactDetailsFrom(request.POST or None, instance=contact)
@@ -237,30 +260,78 @@ def UpdateRegisterStudent(request):
     documentsform = DocumentsFrom(
         request.POST, request.FILES, instance=documents)
 
-    if studentform.is_valid():
-        studentform.save()
-    else:
-        error.append("something wrong in Student detail")
 
-    if contactform.is_valid():
-        contactform.save()
-    else:
-        error.append("something wrong in Contact detail")
+      
 
-    if parentform.is_valid():
-        parentform.save()
-    else:
-        error.append("something wrong in Parent detail")
+    context = {
+        'studentform': studentform,
+        'contactform': contactform,
+        'parentform': parentform,
+        'additionalform': additionalform,
+        'documentsform': documentsform,
+        'student_id' : student_id
+        
+    }
 
-    if additionalform.is_valid():
-        additionalform.save()
-    else:
-        error.append("something wrong in Additional detail")
+    return render(request, 'student/student_edit.html', context=context)
 
-    if documentsform.is_valid():
-        documentsform.save()
-    else:
-        error.append("something wrong in Documents")
+
+@login_required(login_url='login')
+def UpdateRegisterStudent(request, student_id):
+    error = []
+    user = request.user
+    student = get_object_or_404(Student, user=user, student_id=student_id)
+    contact = get_object_or_404(ContactDetails, user=user, student_id=student_id)
+    parent = get_object_or_404(ParentDetails, user=user, student_id=student_id)
+    additional = get_object_or_404(AdditionalDetails, user=user, student_id=student_id)
+    documents = get_object_or_404(Documents, user=user, student_id=student_id)
+
+
+
+    studentform = StudentFrom(instance=student)
+    contactform = ContactDetailsFrom(instance=contact)
+    parentform = ParentDetailsFrom(instance=parent)
+    additionalform = AdditionalDetailsFrom(instance=additional)
+    documentsform = DocumentsFrom(instance=documents)
+
+    if request.method == 'POST':
+    
+        studentform = StudentFrom(request.POST or None, instance=student)
+        contactform = ContactDetailsFrom(request.POST or None, instance=contact)
+        parentform = ParentDetailsFrom(request.POST or None, instance=parent)
+        additionalform = AdditionalDetailsFrom(
+            request.POST or None, instance=additional)
+        documentsform = DocumentsFrom(
+            request.POST, request.FILES, instance=documents)
+
+        if studentform.is_valid():
+            studentform.save()
+        else:
+            print(studentform.errors)
+            error.append("something wrong in Student detail")
+
+        if contactform.is_valid():
+            contactform.save()
+        else:
+            error.append("something wrong in Contact detail")
+
+        if parentform.is_valid():
+            parentform.save()
+        else:
+            error.append("something wrong in Parent detail")
+
+        if additionalform.is_valid():
+            additionalform.save()
+        else:
+            error.append("something wrong in Additional detail")
+
+        if documentsform.is_valid():
+            documentsform.save()
+        else:
+            error.append("something wrong in Documents")
+
+        for i in error:
+            print(i)
 
     context = {
         'studentform': studentform,
@@ -270,5 +341,14 @@ def UpdateRegisterStudent(request):
         'documentsform': documentsform,
         'errors': error,
     }
+    
 
-    return render(request, 'student/updateStudentDetail.html', context=context)
+    return render(request, 'student/student_edit.html', context=context)
+
+
+def Delete(request, student_id):
+    
+    student = get_object_or_404(Student, user=request.user, student_id=student_id)
+    student.delete()
+
+    return redirect('home')
