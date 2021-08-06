@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('student_list', views.student_list, name='sd'),
     path('detail_view/<student_id>', views.detail_view, name='detail_view'),
+    path('Registerchild/', views.Registerchild, name='Registerchild'),
     path('RegisterStudent/', views.RegisterStudent, name='RegisterStudent'),
     path('Update/<student_id>', views.UpdateRegisterStudent, name='update'),
     path('Delete/<student_id>', views.Delete, name='delete'),

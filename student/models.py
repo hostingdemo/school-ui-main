@@ -44,7 +44,6 @@ class Student(models.Model):
 
 # <<<<<<<<<< ContactDetailsForm >>>>>>>>>>>>
 class ContactDetails(models.Model):
-    student_id = models.CharField(max_length=100, null=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     current_addr = models.CharField(max_length=100, null=True)
     current_addr2 = models.CharField(max_length=100, null=True)
@@ -63,7 +62,6 @@ class ContactDetails(models.Model):
 
 # <<<<<<<<<< ParentDetails >>>>>>>>>>>>
 class ParentDetails(models.Model):
-    student_id = models.CharField(max_length=100, null=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     father_name = models.CharField(max_length=100, null=True)
     mother_name = models.CharField(max_length=100, null=True)
@@ -82,7 +80,6 @@ class ParentDetails(models.Model):
 
 # <<<<<<<<<< AdditionalDetailz >>>>>>>>>>>>
 class AdditionalDetails(models.Model):
-    student_id = models.CharField(max_length=100, null=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     privious_school = models.CharField(max_length=100, blank=True, null=True)
     transfer_certificate_no = models.CharField(
@@ -97,7 +94,6 @@ class AdditionalDetails(models.Model):
 
 # <<<<<<<<<< Documents >>>>>>>>>>>>
 class Documents(models.Model):
-    student_id = models.CharField(max_length=100, null=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     photo = models.FileField(upload_to="media", default='shri.jpg', null=True)
     id_proof = models.FileField(upload_to="media", null=True, blank=True)

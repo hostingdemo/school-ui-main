@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 import os
 from django.conf import settings
+from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 import json
 
@@ -28,7 +29,7 @@ from .models import (
 @login_required(login_url='login')
 def student_list(request):
 
-    student_list = Student.objects.all()
+    student_list = Student.objects.filter(user = request.user)
     print(student_list)
     
     return render(request,  'student/student_list.html', {'student_list' : student_list})
@@ -77,20 +78,88 @@ def jsoncall(request):
 
 import uuid 
 
+
+
+
+@login_required(login_url='login')
+def Registerchild(request):
+    studentform = StudentFrom()
+    additionalform = AdditionalDetailsFrom()
+
+    print('here')
+
+    if request.method == 'POST':
+        studentform = StudentFrom(request.POST or None)
+        additionalform = AdditionalDetailsFrom(request.POST or None)
+
+        #unique key is generate here for user
+        uninque_key = uuid.uuid4().hex[:6].upper()
+        print('-------------------------------------')
+        print(uninque_key)
+
+        if studentform.is_valid():
+            
+            firstname = studentform.cleaned_data['firstname']
+            lastname = studentform.cleaned_data['lastname']
+            gender = studentform.cleaned_data['gender']
+            DOB = studentform.cleaned_data['DOB']
+            admission_Number = studentform.cleaned_data['admission_Number']
+            religion = studentform.cleaned_data['religion']
+            caste = studentform.cleaned_data['caste']
+            aadhar = studentform.cleaned_data['aadhar']
+            student = Student(
+                student_id=uninque_key,
+                user=request.user,
+                firstname=firstname,
+                lastname=lastname,
+                gender=gender,
+                DOB=DOB,
+                admission_Number=admission_Number,
+                religion=religion,
+                caste=caste,
+                aadhar=aadhar)
+                
+            student.save()
+
+        if additionalform.is_valid():
+            privious_school = additionalform.cleaned_data['privious_school']
+            transfer_certificate_no = additionalform.cleaned_data['transfer_certificate_no']
+            fee_waiver_category = additionalform.cleaned_data['fee_waiver_category']
+            route_code = additionalform.cleaned_data['route_code']
+            shift = additionalform.cleaned_data['shift']
+            stoppage_name = additionalform.cleaned_data['stoppage_name']
+
+            additional = AdditionalDetails(
+                user=request.user,
+                privious_school=privious_school,
+                transfer_certificate_no=transfer_certificate_no,
+                fee_waiver_category=fee_waiver_category,
+                route_code=route_code,
+                shift=shift,
+                stoppage_name=stoppage_name,
+            )
+            additional.save()
+
+        student_list = Student.objects.filter(user = request.user)
+        context = {
+            'student_list' : student_list,
+        }
+
+        return render(request, 'student/student_add.html', context=context)
+
+    student_list = Student.objects.filter(user = request.user)
+    context = {
+        'studentform': studentform,
+        'additionalform': additionalform,
+        'student_list' : student_list,
+    }
+
+    return render(request, 'student/student_add.html', context=context)
+
+
 @login_required(login_url='login')
 def RegisterStudent(request):
-    try:
-        is_update_available = get_object_or_404(Student, user=request.user)
-        if is_update_available:
-            context = {
-                'is_update_available':True,
-                'is_student_detail_show':False
-            }
-    except:
-        context = {
-            'is_update_available':False,
-            'is_student_detail_show':True
-        }
+    
     error = []
     studentform = StudentFrom()
     contactform = ContactDetailsFrom()
@@ -148,7 +217,6 @@ def RegisterStudent(request):
             permanent_city = contactform.cleaned_data['permanent_city']
             permanent_pincode = contactform.cleaned_data['permanent_pincode']
             contact = ContactDetails(
-                student_id=uninque_key,
                 user=request.user,
                 current_addr=current_addr,
                 current_addr2=current_addr2,
@@ -174,7 +242,6 @@ def RegisterStudent(request):
             mother_quali = parentform.cleaned_data['mother_quali']
             family_annual_income = parentform.cleaned_data['family_annual_income']
             parent = ParentDetails(
-                student_id=uninque_key,
                 user=request.user,
                 father_name=father_name,
                 mother_name=mother_name,
@@ -197,7 +264,6 @@ def RegisterStudent(request):
             stoppage_name = additionalform.cleaned_data['stoppage_name']
 
             additional = AdditionalDetails(
-                student_id=uninque_key,
                 user=request.user,
                 privious_school=privious_school,
                 transfer_certificate_no=transfer_certificate_no,
@@ -216,7 +282,6 @@ def RegisterStudent(request):
             character_certificate = documentsform.cleaned_data['character_certificate']
 
             document = Documents(
-                student_id=uninque_key,
                 user=request.user,
                 photo=photo,
                 id_proof=id_proof,
@@ -227,10 +292,15 @@ def RegisterStudent(request):
             )
 
             document.save()
-        return redirect('home')
 
-    print(error)
+        student_list = Student.objects.filter(user = request.user)
+        context = {
+            'student_list' : student_list,
+        }
 
+        return render(request, 'student/student_add.html', context=context)
+        
+    student_list = Student.objects.filter(user = request.user)
     context = {
         'studentform': studentform,
         'contactform': contactform,
@@ -238,9 +308,10 @@ def RegisterStudent(request):
         'additionalform': additionalform,
         'documentsform': documentsform,
         'errors': error,
+        'student_list' : student_list,
     }
 
-    return render(request, 'student/studentdetail.html', context=context)
+    return render(request, 'student/student_add.html', context=context)
 
 
 @login_required(login_url='login')
@@ -351,4 +422,5 @@ def Delete(request, student_id):
     student = get_object_or_404(Student, user=request.user, student_id=student_id)
     student.delete()
 
-    return redirect('home')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
