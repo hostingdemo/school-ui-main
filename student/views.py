@@ -295,7 +295,7 @@ def RegisterStudent(request):
 
         student_list = Student.objects.filter(user = request.user)
         context = {
-            'student_list' : student_list,
+            'student_list' : [],
         }
 
         return render(request, 'student/student_add.html', context=context)
@@ -308,7 +308,7 @@ def RegisterStudent(request):
         'additionalform': additionalform,
         'documentsform': documentsform,
         'errors': error,
-        'student_list' : student_list,
+        'student_list' : [],
     }
 
     return render(request, 'student/student_add.html', context=context)
