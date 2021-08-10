@@ -1,596 +1,463 @@
 {% extends 'student/base.html'%}
 {% load static %}
+{% load crispy_forms_tags %}
 
 
 {% block main_content %}
-    <div class="cotainer">
-       
-            <div class="row justify-content-center m-3">
+<div class="">
 
-                {% if student_list %}
+    <div class="row">
 
-                <div class="col-md-12">
-                    <h4>Childs</h4>
+        {% if student_list %}
 
-                    <div class="bs-example">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="border:none;">Name</th>
-                                    <th style="float:right;border:none;">Action</th>
-                                </tr>
-                            </thead>
+        <div class="col-md-12">
+            <h4>Childs</h4>
 
-                            <tbody style="border-top: 1.5px solid lightgrey;">
+            <div class="bs-example">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="border:none;">Name</th>
+                            <th style="float:right;border:none;">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody style="border-top: 1.5px solid lightgrey;">
 
 
-                                {% for i in student_list %}
-                                    <tr> <td>{{ i.firstname }}</td>
-                                
-                                    <td style="float:right;border-top: none">
-                                        <a href="{% url 'detail_view' i.student_id %}"><button type="button" class="btn btn-outline-info">View</button><a> 
-                                        <a href="{% url 'update'  i.student_id  %}"><button type="button" class="btn btn-outline-info">Edit</button><a> 
-                                        <a href="{% url 'delete'  i.student_id  %}"><button type="button" class="btn btn-outline-danger">Delete</button></a>
-                                    </td>
-                                    </tr>
-                                {% endfor %}   
-                            </tbody>
-                            
-                        </table>
-                        <hr>
-                    </div>
-                    <div class="row justify-content-center">
-                        <button type="button" onclick="myFunction()" style="display:block;" id="action" class="btn btn-primary btn-lg m-1 ">
-                        Add child
-                        </button>
-                    </div>
-                </div>
+                        {% for i in student_list %}
+                        <tr>
+                            <td>{{ i.firstname }}</td>
 
-                <form method="POST"  action="{% url 'Registerchild' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                    <div class="col-md-6" id="block1" style="display:none;">
-                        <div class="card">
-                            <div class="card-header">Student Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">First-Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.firstname}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Last-Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.lastname}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Religion</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.religion}}
-                                    </div>
-                                </div>
+                            <td style="float:right;border-top: none">
+                                <a href="{% url 'detail_view' i.student_id %}"><button type="button"
+                                        class="btn btn-outline-info">View</button><a>
+                                        <a href="{% url 'update'  i.student_id  %}"><button type="button"
+                                                class="btn btn-outline-info">Edit</button><a>
+                                                <a href="{% url 'delete'  i.student_id  %}"><button type="button"
+                                                        class="btn btn-outline-danger">Delete</button></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
 
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Caste</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.caste}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Admission No.</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.admission_Number}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Aadhar No.</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.aadhar}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">DOB</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.DOB}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Gender</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.gender}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6" id="block2" style="display:none;">
-                        <div class="card">
-                            <div class="card-header">Additional Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Privious School</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.privious_school}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Transfer Certificate No</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.transfer_certificate_no}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Stoppage Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.stoppage_name}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Shift</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.shift}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Rout Code</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.route_code}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">fee Waiver Category</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.fee_waiver_category}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
+                </table>
+                <hr>
+            </div>
+            <div class="row justify-content-center">
+                <button type="button" onclick="myFunction()" style="display:block;" id="action"
+                    class="btn btn-primary m-1 ">
+                    Add child
+                </button>
+            </div>
+        </div>
 
-                    <div class="row justify-content-center">
-                        <button type="submit" style="display:none;" id="add_button" class="btn btn-primary btn-lg m-5 ">
-                        Add child
-                        </button>
-                    </div>
-
-                </form>
-
-                {% else %}
-
-                <form method="POST"  action="" enctype="multipart/form-data">
+        <div class="col-12">
+            <form method="POST" action="{% url 'Registerchild' %}" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                    <div class="col-md-6">
-                    
-                        <div class="card">
-                            <div class="card-header">Student Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">First-Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.firstname}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Last-Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.lastname}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Religion</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.religion}}
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Caste</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.caste}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Admission No.</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.admission_Number}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Aadhar No.</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.aadhar}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">DOB</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.DOB}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Gender</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{studentform.gender}}
-                                    </div>
-                                </div>
+                <div id="block1" style="display:none; overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Student Information</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address">First-Name</label>
+                                {{studentform.firstname}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address">Last-Name</label>
+                                {{studentform.lastname}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Gender</label>
+                                {{studentform.gender}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">DOB</label>
+                                {{studentform.DOB}}
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">Parent / Guardian Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Father Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.father_name}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Mother Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.mother_name}}
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label ">Religion</label>
+                                {{studentform.religion}}
+                            </div>
 
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Father Qualification</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.father_quali}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Mother Qualification</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.mother_quali}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Father DOB</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.father_dob}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Mother DOB</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.mother_dob}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Email</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.email}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Annual Income</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.family_annual_income}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Phone no.</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.phone_no}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Phone No 2</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{parentform.alternate_phone_no}}
-                                    </div>
-                                </div>
-                                {% comment %}
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                    Submit
-                                    </button>
-                                </div>
-                                {% endcomment %}
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Caste</label>
+                                {{studentform.caste}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">AdmissionNo.</label>
+                                {{studentform.admission_Number}}
+                            </div>
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Aadhar No.</label>
+                                {{studentform.aadhar}}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center m-3">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">Contact Information</div>
 
-                            <div class="card-body">
-                                <p class="text-center">Current Address</p>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Address 1</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.current_addr}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">address 2</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.current_addr2}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">State</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.state}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">City</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.city}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Pincode</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.pincode}}
-                                    </div>
-                                </div>
+                <div id="block2" style="display:none; overflow: hidden;" class="card shadow-sm border-0">
+                    <div class="card-header">Additional Information</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">PriviousSchool</label>
+                                {{additionalform.privious_school}}
+                            </div>
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">TransferCertificate No</label>
+                                {{additionalform.transfer_certificate_no}}
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">Contact Information</div>
-
-                            <div class="row">
-                                <hr>
-                                <div class="col-lg-12 ml-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkb">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <i>Same as Current Address</i>
-                                        </label>
-                                        </div>
-                                </div>
-                                <br><br>
-                                <hr>
+                        <div class="row">
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Stoppage Name</label>
+                                {{additionalform.stoppage_name}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Shift</label>
+                                {{additionalform.shift}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">RoutCode</label>
+                                {{additionalform.route_code}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">fee Waiver Category</label>
+                                {{additionalform.fee_waiver_category}}
                             </div>
 
-                            <div class="card-body">
-                                <p class="text-center">Permanent Address</p>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Address 1</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.permanent_addr}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">address 2</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.permanent_addr2}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">State</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.permanent_state}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">City</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.permanent_city}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Pincode</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{contactform.permanent_pincode}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-center m-3">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">Additional Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Privious School</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.privious_school}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Transfer Certificate No</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.transfer_certificate_no}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Stoppage Name</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.stoppage_name}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Shift</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.shift}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Rout Code</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.route_code}}
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">fee Waiver Category</label>
-                                    <div class="col-md-6">
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{additionalform.fee_waiver_category}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">Contact Information</div>
-                            <div class="card-body">
-                                <div class="form-group row">
-
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Upload Photo</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview " style="width: 200px; height: 200px;display: flex; background-color:snow; justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}" style="width: 200px; height: 200px;" id="priviewphoto" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.photo}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Caste Certificate</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview " style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}" style="width: 200px; height: 200px;"   id="priviewCastCerti" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.caste_certificate}}
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Upload TC</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview" style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}" style="width: 200px; height: 200px;" id="priviewTC" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.transfer_certificate}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Upload Character Certificate</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview" style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"> <img src="{% static 'studentreg/img/200x200.jpg' %}" style="width: 200px; height: 200px;" id="priviewCharacterCerti" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.character_certificate}}
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Upload ID Proof</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview " style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}"  style="width: 200px; height: 200px;"   id="priviewID" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.id_proof}}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="pri" style="justify-content: center; display: flex;">
-                                            <b>Upload Domicile</b>
-                                        </div>
-                                        <div class="pri p-4" style="justify-content: center; display: flex;">
-                                            <span class="priview " style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}" style="width: 200px; height: 200px;"  id="priviewDomicile" alt="Blank"></span>
-                                        </div>
-                                        {% comment %} <input type="text" id="email_address" class="form-control" name="email-address" required autofocus> {% endcomment %}
-                                        {{documentsform.domicile}}
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
-                    <button type="submit" class="btn btn-primary btn-lg m-5 ">
-                    Submit
+                    <button type="submit" style="display:none;" id="add_button" class="btn btn-primary m-5 ">
+                        Add child
                     </button>
                 </div>
-            
+
+            </form>
+        </div>
+        {% else %}
+
+        <div class="col-12">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Student Form Starts -->
+                <div style="overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Student Information</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address">First-Name</label>
+                                {{studentform.firstname}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address">Last-Name</label>
+                                {{studentform.lastname}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Gender</label>
+                                {{studentform.gender}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">DOB</label>
+                                {{studentform.DOB}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label ">Religion</label>
+                                {{studentform.religion}}
+                            </div>
+
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Caste</label>
+                                {{studentform.caste}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">AdmissionNo.</label>
+                                {{studentform.admission_Number}}
+                            </div>
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Aadhar No.</label>
+                                {{studentform.aadhar}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Student Form Ends -->
+
+                <!-- Parent Form Starts -->
+                <div style="overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Parent / Guardian Information</div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Father Name</label>
+                                {{parentform.father_name}}
+                            </div>
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Father DOB</label>
+                                {{parentform.father_dob}}
+                            </div>
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Father Qualification</label>
+                                {{parentform.father_quali}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Mother Name</label>
+                                {{parentform.mother_name}}
+                            </div>
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Mother DOB</label>
+                                {{parentform.mother_dob}}
+                            </div>
+                            <div class="col-12 col-md-4 form-group">
+                                <label for="email_address" class="form-label">Mother Qualification</label>
+                                {{parentform.mother_quali}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Email</label>
+                                {{parentform.email}}
+                            </div>
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Phone no.</label>
+                                {{parentform.phone_no}}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_address" class="form-label text-md-right">Annual Income</label>
+                            {{parentform.family_annual_income}}
+                        </div>
+                    </div>
+                </div>
+                <!-- Parent Form Ends -->
+
+                <!-- Contact Form Starts -->
+                <div style="overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Contact Information</div>
+                    <div class="card-body d-flex flex-column flex-lg-row">
+
+                        <div class="mb-4 mb-md-0 mr-md-3">
+                            <small class="text-muted d-block mb-3"><b>Current Address</b></small>
+                            <div class="border rounded px-3 pt-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 form-group">
+                                        <label for="email_address" class="form-label">Address 1</label>
+                                        {{contactform.current_addr}}
+                                    </div>
+                                    <div class="col-12 col-md-6 form-group">
+                                        <label for="email_address" class="form-label">Address 2</label>
+                                        {{contactform.current_addr2}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">State</label>
+                                        {{contactform.state}}
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">City</label>
+                                        {{contactform.city}}
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">Pincode</label>
+                                        {{contactform.pincode}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ml-md-3">
+                            <small class="text-muted d-block mb-3"><b>Parmanent Address</b></small>
+                            <div class="border rounded px-3 pt-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 form-group">
+                                        <label for="email_address" class="form-label">Address 1</label>
+                                        {{contactform.permanent_addr}}
+                                    </div>
+                                    <div class="col-12 col-md-6 form-group">
+                                        <label for="email_address" class="form-label">Address 2</label>
+                                        {{contactform.permanent_addr2}}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">State</label>
+                                        {{contactform.permanent_state}}
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">City</label>
+                                        {{contactform.permanent_city}}
+                                    </div>
+                                    <div class="col-12 col-md-4 form-group">
+                                        <label for="email_address" class="form-label">Pincode</label>
+                                        {{contactform.permanent_pincode}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input ml-0" type="checkbox" value="" id="checkb">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    <i>Same as Current Address</i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contact Form Ends -->
+
+                <!-- Additional Form Starts -->
+                <div style="overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Additional Information</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">PriviousSchool</label>
+                                {{additionalform.privious_school}}
+                            </div>
+                            <div class="col-12 col-md-6 form-group">
+                                <label for="email_address" class="form-label">TransferCertificate No</label>
+                                {{additionalform.transfer_certificate_no}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Stoppage Name</label>
+                                {{additionalform.stoppage_name}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">Shift</label>
+                                {{additionalform.shift}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">RoutCode</label>
+                                {{additionalform.route_code}}
+                            </div>
+                            <div class="col-12 col-lg-3 col-md-6 form-group">
+                                <label for="email_address" class="form-label">fee Waiver Category</label>
+                                {{additionalform.fee_waiver_category}}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Additional Form Ends -->
+
+
+                <!-- Upload Form Starts -->
+                <div style="overflow: hidden;" class="card shadow-sm border-0 my-5">
+                    <div class="card-header">Upload Documents</div>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-12 col-md-3 text-center mb-3 border rounded mx-md-3 py-3">
+                                <b>Upload Photo</b>
+                                <div class="pri p-4" style="justify-content: center; display: flex;">
+                                    <span class="priview"
+                                        style="width: 200px; height: 200px;display: flex; background-color:snow; justify-content: center;">
+                                        <img src="{% static 'studentreg/img/200x200.jpg' %}"
+                                            style="width: 200px; height: 200px;" id="priviewphoto" alt="Blank"></span>
+                                </div>
+                                {{documentsform.photo}}
+                            </div>
+
+                            <div class="col-12 col-md-3 text-center mb-3 border rounded mx-md-3 py-3">
+                                <b>Upload ID Proof</b>
+                                <div class="pri p-4" style="justify-content: center; display: flex;">
+                                    <span class="priview "
+                                        style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img
+                                            src="{% static 'studentreg/img/200x200.jpg' %}"
+                                            style="width: 200px; height: 200px;" id="priviewID" alt="Blank"></span>
+                                </div>
+                                {{documentsform.id_proof}}
+                            </div>
+
+                            <div class="col-12 col-md-3 text-center mb-3 border rounded mx-md-3 py-3">
+                                <b>Caste Certificate</b>
+                                <div class="pri p-4" style="justify-content: center; display: flex;">
+                                    <span class=" priview " style=" width: 200px; height: 200px;display: flex; background-color: snow;
+                                    justify-content: center;"><img src="{% static 'studentreg/img/200x200.jpg' %}"
+                                            style="width: 200px; height: 200px;" id="priviewCastCerti"
+                                            alt="Blank"></span>
+                                </div>
+                                {{documentsform.caste_certificate}}
+                            </div>
+
+                            <div class="col-12 col-md-3 text-center mb-3 border rounded mx-md-3 py-3">
+                                <b>Upload Character Certificate</b>
+                                <div class="pri p-4" style="justify-content: center; display: flex;">
+                                    <span class="priview"
+                                        style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;">
+                                        <img src="{% static 'studentreg/img/200x200.jpg' %}"
+                                            style="width: 200px; height: 200px;" id="priviewCharacterCerti"
+                                            alt="Blank"></span>
+                                </div>
+                                {{documentsform.character_certificate}}
+                            </div>
+
+                            <div class="col-12 col-md-3 text-center mb-3 border rounded mx-md-3 py-3">
+                                <b>Upload Domicile</b>
+                                <div class="pri p-4" style="justify-content: center; display: flex;">
+                                    <span class="priview "
+                                        style="width: 200px; height: 200px;display: flex; background-color: snow; justify-content: center;"><img
+                                            src="{% static 'studentreg/img/200x200.jpg' %}"
+                                            style="width: 200px; height: 200px;" id="priviewDomicile"
+                                            alt="Blank"></span>
+                                </div>
+                                {{documentsform.domicile}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <button type="submit" class="btn btn-primary btn mb-5">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+
             </form>
             {% endif %}
 
-        </form>
-    </div>
+        </div>
 
 
-{% comment %} script for add child {% endcomment %}
+        {% comment %} script for add child {% endcomment %}
 
-<script>
-    function myFunction() {
-    var b = document.getElementById("action");
-    var x = document.getElementById("block1");
-    var y = document.getElementById("block2");
-    var z = document.getElementById("add_button");
-    
+        <script>
+            function myFunction() {
+                var b = document.getElementById("action");
+                var x = document.getElementById("block1");
+                var y = document.getElementById("block2");
+                var z = document.getElementById("add_button");
 
-    b.style.display = "none";
-    x.style.display = "block";
-    y.style.display = "block";
-    z.style.display = "block";
 
-    }
-</script>
+                b.style.display = "none";
+                x.style.display = "block";
+                y.style.display = "block";
+                z.style.display = "block";
 
-{% endblock main_content %}
+            }
+        </script>
+
+        {% endblock main_content %}
