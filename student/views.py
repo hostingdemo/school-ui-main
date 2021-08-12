@@ -71,10 +71,23 @@ def home(request):
 
 # <<<<<<<<<< JsonCall view >>>>>>>>>>
 def jsoncall(request):
-    json_data = open(os.path.join(settings.BASE_DIR, 'states/states-and-districts.json'))
-    data = json.load(json_data)
-    print('json is colled')
-    return JsonResponse(data)
+
+
+    state = 'Maharashtra'
+
+    districts = []
+
+    data =  json.load(open("static/states-and-districts.json"))
+
+    for i in data:
+        if i["state"] == state:
+            a = i["districts"]
+            print(a)
+            districts.append(a)
+
+
+
+    return JsonResponse(districts, safe=False)
 
 import uuid 
 

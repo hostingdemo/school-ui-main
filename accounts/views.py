@@ -10,7 +10,7 @@ from django.contrib.auth import login as auth_login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
 
-
+from django.views.generic import View
 from .forms import CustomUserCreationForm
 
 from django.core.mail import send_mail, BadHeaderError
@@ -109,4 +109,52 @@ def student_login(request):
         return render(request, 'accounts/login1.html')
 
 
+class school_login(View):
+   
+    template_name = 'accounts/school_login.html'
 
+
+    def post(self, request):
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(username=email, password=password)
+        print('----------------------------------------')
+        if user is not None:
+            if user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse('home'))
+
+            else:
+                return render(request, 'accounts/school_login.html')
+
+        else:
+            return render(request, 'accounts/school_login.html')
+
+    def get(self, request):
+        return render(request, 'accounts/school_login.html')
+
+        
+class parent_login(View):
+   
+    template_name = 'accounts/school_login.html'
+
+
+    def post(self, request):
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(username=email, password=password)
+        print('----------------------------------------')
+        if user is not None:
+            if user.is_active:
+                auth.login(request, user)
+                return HttpResponseRedirect(reverse('home'))
+
+            else:
+                return render(request, 'accounts/school_login.html')
+
+        else:
+            return render(request, 'accounts/school_login.html')
+
+    def get(self, request):
+        return render(request, 'accounts/school_login.html')
+ 
