@@ -1,9 +1,14 @@
-from django.db import models
+
 
 # Create your models here.
 from django.db import models
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+User = settings.AUTH_USER_MODEL
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,3 +51,18 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+
+class user_type(models.Model):
+
+    user = models.ForeignKey(User , on_delete=models.CASCADE, unique=True)
+    is_parents = models.BooleanField(default=False, null=True, blank=True)
+    is_school = models.BooleanField(default=False, null=True, blank=True)
+
+
+
+class school_details(models.Model):
+
+    email = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    contact_number = models.IntegerField()

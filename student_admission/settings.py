@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'student',
     'rest_api',
 
+    'six',
     'django.contrib.sites',
     'allauth',
     'allauth.account',

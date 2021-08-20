@@ -1,17 +1,15 @@
-from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import login as auth_login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
-
+from .models import *
 from django.views.generic import View
-from .forms import CustomUserCreationForm
+from .forms import *
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
@@ -23,8 +21,12 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.contrib import messages #import messages
-
+from accounts.models import user_type
 from django.contrib.auth import get_user_model
+
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+from .tokens import account_activation_token
 User = get_user_model()
 
 from student_admission.settings import EMAIL_HOST_USER
@@ -59,23 +61,122 @@ def password_reset_request(request):
 	password_reset_form = PasswordResetForm()
 	return render(request=request, template_name="main/password/password_reset.html", context={"password_reset_form":password_reset_form})
 
-def signup(request):
-    form = CustomUserCreationForm()
-    if request.method == 'POST':
+
+
+class signup_parents_student(View):
+    def post(self, request):
+
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+
             form.save()
-            username=form.cleaned_data['email']
+
+            email=form.cleaned_data['email']
             password=form.cleaned_data['password1']
-            user = authenticate(username=username, password=password)
+
+            usert = None
+            user = User.objects.get(email=email)
+            usert = user_type(user=user,is_parents=True)
+            usert.save()
+
+           
+            user = authenticate(username=email, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return redirect('home')
 
-    return render(request, 'accounts/signup1.html', {'form': form})
 
-    
+    def get(self, request):
+        form = CustomUserCreationForm()
+        return render(request, 'accounts/signup1.html', {'form': form})
+
+
+def schoolsignup_details(request):
+
+    if request.method == 'POST':
+
+        email = request.POST.get('email')
+        name = request.POST.get('name')
+        contact_number = request.POST.get('contact_number')
+
+        school_details.objects.create(email=email, name=name, contact_number=contact_number)
+
+        return HttpResponseRedirect(reverse('login'))
+
+
+    else:
+        
+        return render(request, 'accounts/school_signup_details.html')
+
+
+class signup_school(View):
+
+    # code for superadmin only
+
+    def get(self, request):
+        form = CustomUserCreationForm()
+        return render(request, 'accounts/signup1.html', {'form': form})
+
+
+    def post(self, request):
+
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+
+            user = form.save(commit=False)
+            user.is_active = False # Deactivate account till it is confirmed
+            user.save()
+
+            current_site = 'jdmr.com'
+            subject = 'Activate Your jdmr Account'
+            message = render_to_string('accounts/account_activation_email.html', {
+                'user': user,
+                'domain': 'JDMR',
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+                
+            })
+            user.email_user(subject, message)
+
+            messages.success(request, ('Please Confirm your email to complete registration.'))
+
+            return redirect('signup_school')
+
+        else: 
+            return redirect('signup_school')
+
+
+class ActivateAccount(View):
+
+    def get(self, request, uidb64, token, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            print('1')
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+            print('2')
+
+
+        if user is not None and account_activation_token.check_token(user, token):
+            print('3')
+            user.is_active = True
+            user.save()
+            print('4')
+
+
+            messages.success(request, ('Your account have been confirmed.'))
+            return redirect('home')
+        else:
+            print('6')
+
+            print('The confirmation link was invalid, possibly because it has already been used.')
+            return redirect('home')
+
+
+
+
 @login_required(login_url='login')
 def logoutview(request):
     logout(request)
@@ -91,7 +192,8 @@ def student_login(request):
 
         print(email)
         print(password)
-        user = auth.authenticate(username = email, password = password)
+        print('-----------------------jshdg sdj sdbhjdbkdnsd------------------')
+        user = authenticate(username=email, password=password, school=True)
 
         if user is not None:
             auth.login(request, user)
@@ -107,54 +209,3 @@ def student_login(request):
     else:
         print('Somethings went wrong, contact us')
         return render(request, 'accounts/login1.html')
-
-
-class school_login(View):
-   
-    template_name = 'accounts/school_login.html'
-
-
-    def post(self, request):
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(username=email, password=password)
-        print('----------------------------------------')
-        if user is not None:
-            if user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('home'))
-
-            else:
-                return render(request, 'accounts/school_login.html')
-
-        else:
-            return render(request, 'accounts/school_login.html')
-
-    def get(self, request):
-        return render(request, 'accounts/school_login.html')
-
-        
-class parent_login(View):
-   
-    template_name = 'accounts/school_login.html'
-
-
-    def post(self, request):
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(username=email, password=password)
-        print('----------------------------------------')
-        if user is not None:
-            if user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('home'))
-
-            else:
-                return render(request, 'accounts/school_login.html')
-
-        else:
-            return render(request, 'accounts/school_login.html')
-
-    def get(self, request):
-        return render(request, 'accounts/school_login.html')
- 
